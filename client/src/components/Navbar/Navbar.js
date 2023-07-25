@@ -12,12 +12,14 @@ import Notepad from "../Notepad/Notepad";
 import Calendar from "../Calendar/Calendar";
 import UserProfile from "../User-Profile/UserProfile";
 import Timer from "../Pomodoro-Timer/Timer";
+import Calculator from "../Calculator/Calculator";
 
 function Navbar() {
   const navigate = useNavigate();
   const [sidebar, setSidebar] = useState(false);
   const [showTodo, setShowTodo] = useState(false);
   const [showNotepad, setShowNotepad] = useState(false);
+  const [showCalculator, setShowCalculator] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
   const [showNotepad, setShowNotepad] = useState(false);
   const [showUserProfile, setUserProfile] = useState(false);
@@ -53,6 +55,10 @@ function Navbar() {
     setShowTodo(true);
   };
 
+  const SetVisibleCalculator = () => {
+    setShowCalculator(true);
+  };
+
   const SetVisibleCalendar = () => {
     setShowCalendar(true);
   };
@@ -67,6 +73,10 @@ function Navbar() {
 
   const handleClose = () => {
     setShowTodo(false);
+  };
+
+  const handleCloseCalculator = () => {
+    setShowCalculator(false);
   };
 
   const SetVisibleTimer = () => {
@@ -131,7 +141,7 @@ function Navbar() {
             <button onClick={SetVisibleCalendar}>
               <BsIcons.BsCalendar3 />
             </button>
-            <button>
+            <button onClick={SetVisibleCalculator}>
               <FaIcons.FaCalculator />
             </button>
             <button>
@@ -152,6 +162,7 @@ function Navbar() {
       {showTodo && <Todo onClose={handleClose} />}
       {showNotepad && <Notepad onClose={handleCloseNotepad} />}
       {showCalendar && <Calendar onClose={handleClose4} />}
+      {showCalculator && <Calculator onClose={handleCloseCalculator} />}
       {showUserProfile && (
         <UserProfile user={user} email={email} onClose={handleClose2} />
       )}
