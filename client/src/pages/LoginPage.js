@@ -6,6 +6,17 @@ function LoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  function handlePasswordChange(e) {
+    setPassword(e.target.value);
+    setErrorMessage(""); // Clear error message when editing password
+  }
+
+  function handleEmailChange(e) {
+    setEmail(e.target.value);
+    setErrorMessage(""); // Clear error message when editing password
+  }
 
   async function loginUser(event) {
     event.preventDefault();
@@ -24,11 +35,11 @@ function LoginPage() {
       });
       if (response.ok) {
         const data = await response.json();
-        alert(data.message);
+        //alert(data.message);
         navigate('/');
       } else {
         const errorData = await response.json();
-        alert(errorData.error);
+        setErrorMessage(errorData.error); // Set error message in state
       }
     } catch (err) {
       console.log(err);
@@ -38,25 +49,39 @@ function LoginPage() {
   return (
     <div>
       <div className="Login">
+        <div className="LoginShadow"></div>
+        <div className="Loginn">
       <h1>Login</h1>
       <form onSubmit={loginUser}>
         <input className="InputL"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={handleEmailChange}
           type="email"
           placeholder="Email"
         />
         <br />
         <input className="InputL"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={handlePasswordChange}
           type="password"
           placeholder="Password"
         />
         <br />
+        <p className="errorText">{errorMessage}</p> {}
         <input className="buttL" type="submit" value="Login" />
       </form>
       <button className="buttL" onClick={() => navigate("/register")}>Sign up</button>
+    </div>
+
+    <div className="WelcomeLShadow">
+      shadow
+    </div>
+
+    <div className="WelcomeL">
+      Welcome back!
+    </div>
+
+
     </div>
     </div>
   );

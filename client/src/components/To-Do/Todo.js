@@ -2,9 +2,17 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { Resizable } from 'react-resizable';
 import Draggable from 'react-draggable';
+import DatePicker from 'react-datepicker';
+import TimePicker from 'react-time-picker';
+import 'react-datepicker/dist/react-datepicker.css';
 import './Todo.css';
+import * as AiIcons from "react-icons/ai"
+import * as BsIcons from "react-icons/bs"
+import * as HiIcons from "react-icons/hi"
+import * as MdIcons from "react-icons/md"
 //API
 const api_base = 'http://localhost:3001/api/todos';
+const api_base2 = 'http://localhost:3001/api/event';
 
 class Todo extends React.Component {
   constructor(props) {
@@ -16,7 +24,13 @@ class Todo extends React.Component {
       isBoxOpen: true,
       todos: [],
       popupActive: false,
-      newTodo: ""
+      popupActive2: false,
+      newTodo: "",
+      newEvent: "",
+      selectedDateS: new Date(),
+      selectedTimeS: '00:00',
+      selectedDateE: new Date(),
+      selectedTimeE: '00:00'
     };
   }
 
@@ -100,6 +114,41 @@ class Todo extends React.Component {
       console.error("Failed to update the Todo item.");
     }
   }
+
+  addEvent = async () => {
+    const formattedStartDate = this.state.selectedDateS.toISOString().split('T')[0];
+    const formattedEndDate = this.state.selectedDateE.toISOString().split('T')[0];
+    const eventData = {
+      title: this.state.newEvent,
+      start: formattedStartDate + 'T' + this.state.selectedTimeS + ':00',
+      end: formattedEndDate + 'T' + this.state.selectedTimeE + ':00',
+    };
+
+    /*
+    const eventData = {
+      title: "Walk tahep dog",
+      start: "2023-07-31T10:00:00",
+      end: "2023-07-31T11:00:00"
+    }*/
+
+    const data = await fetch(api_base2 + "/new", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: 'include',
+      body: JSON.stringify(eventData)
+    }).then(res => res.json());
+
+    this.setState(() => ({
+      popupActive2: false,
+      newEvent: "",
+      selectedDateS: new Date(),
+      selectedTimeS: '00:00',
+      selectedDateE: new Date(),
+      selectedTimeE: '00:00'
+    }));
+  }
   
 
   handleResize = (e, { size }) => {
@@ -122,15 +171,6 @@ class Todo extends React.Component {
     this.setState({
       position: newPosition
     });
-
-    if (
-      newPosition.x - width - 500 < -innerWidth ||
-      newPosition.x > innerWidth ||
-      newPosition.y - height - 280 < -innerHeight ||
-      newPosition.y > innerHeight
-    ) {
-      this.handleClose();
-    }
   };
 
   handleClose = () => {
@@ -140,11 +180,36 @@ class Todo extends React.Component {
     }
   };
 
+  handleDateChangeS = (date) => {
+    this.setState({
+      selectedDateS: date
+    })
+  }
+
+  handleTimeChangeS = (time) => {
+    this.setState({
+      selectedTimeS: time
+    })
+  }
+
+  handleDateChangeE = (date) => {
+    this.setState({
+      selectedDateE: date
+    })
+  }
+
+  handleTimeChangeE = (time) => {
+    this.setState({
+      selectedTimeE: time
+    })
+  }
+
   render() {
     const { width, height, position} = this.state;
-    const { todos, popupActive, newTodo } = this.state;
+    const { todos, popupActive, popupActive2, newTodo } = this.state;
 
     return (
+      <div className='TodoMain'>
         <Draggable
             position={position}
             onDrag={this.handleDrag}
@@ -168,8 +233,8 @@ class Todo extends React.Component {
             <div className="box">
                 <div className="TodoHandle">
                     <div className="TodoHandle-content">Tasks</div>
-                    <button className="close-button" onClick={this.handleClose}>
-                        -
+                    <button className="Todoclose-button" onClick={this.handleClose}>
+                    <AiIcons.AiOutlineClose></AiIcons.AiOutlineClose>
                     </button>
                 </div>
 
@@ -195,7 +260,11 @@ class Todo extends React.Component {
 
                                 </div>
 
-                                <div className="delete-todo" onClick={() => this.deleteTodo(todo._id)}></div>
+                                <div className="addEvent" onClick={() => this.setState({popupActive2: true, newEvent: todo.text})}>
+                                  <BsIcons.BsCalendarEvent></BsIcons.BsCalendarEvent>
+                                </div>
+                                
+                                <div className="delete-todo" onClick={() => this.deleteTodo(todo._id)}><BsIcons.BsFillTrash3Fill></BsIcons.BsFillTrash3Fill></div>
                             </div>
                         )) : (
                             <p>You currently have no tasks</p>
@@ -206,10 +275,10 @@ class Todo extends React.Component {
 
                     {popupActive ? (
                         <div className="popup">
-                            <div className="closePopup" onClick={() => this.setState({ popupActive: false })}>X</div>
+                            <div className="closePopup" onClick={() => this.setState({ popupActive: false })}><AiIcons.AiOutlineCloseCircle></AiIcons.AiOutlineCloseCircle></div>
                             <div className="content">
                                 <input type="text" className="add-todo-input" onChange={e => this.setState({ newTodo: e.target.value })} value={newTodo} />
-                                <div className="button" onClick={this.addTodo}>Create Task</div>
+                                <div className="Todobutton" onClick={this.addTodo}><MdIcons.MdOutlinePostAdd></MdIcons.MdOutlinePostAdd></div>
                             </div>
                         </div>
                     ) : ''}
@@ -219,6 +288,34 @@ class Todo extends React.Component {
             </Resizable>
         </div>
         </Draggable>
+        {popupActive2 ? (
+          <div className='popup2'>
+            <div className="closePopup2" onClick={() => this.setState({ popupActive2: false })}>X</div>
+            <h2 className='popup2Title'>Select Date and Time</h2>
+            <div>
+              <h3 className='popup2Date'>Date:</h3>
+              <DatePicker
+                selected={this.state.selectedDateS}
+                onChange={this.handleDateChangeS}
+                dateFormat="yyyy-MM-dd"
+              />
+              <span className='between'>to</span>
+              <DatePicker
+                selected={this.state.selectedDateE}
+                onChange={this.handleDateChangeE}
+                dateFormat="yyyy-MM-dd"
+              />
+            </div>
+            <div className='popup2TH'>
+              <h3 className='popup2Date'>Time:</h3>
+              <TimePicker clockIcon={null} clearIcon={null} value={this.state.selectedTimeS} onChange={this.handleTimeChangeS} />
+              <span className='between'>to</span>
+              <TimePicker clockIcon={null}  clearIcon={null} value={this.state.selectedTimeE} onChange={this.handleTimeChangeE} />
+              <button className='EventSubmit' onClick={this.addEvent} >Submit</button>
+            </div>
+          </div>
+      ) : ''}
+      </div>
     );
   }
 }

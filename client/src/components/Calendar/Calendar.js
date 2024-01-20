@@ -1,14 +1,59 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import Draggable from 'react-draggable';
 import './Calendar.css';
+import * as AiIcons from "react-icons/ai"
+const api_base = 'http://localhost:3001/api/event';
 
 function Calendar({onClose}) {
-    const [position, setPosition] = useState({ x: 400, y: 100 });
+    const calendarWidth = 400; // You can adjust this width based on your design
+    const calendarHeight = 400; // You can adjust this height based on your design
+    const initialX = 400;
+    const initialY = 300;
+    const [position, setPosition] = useState({ x: initialX, y: initialY });
+    const [events, setEvents] = useState([]);
 
+    useEffect(() => {
+        // Fetch events from the backend API
+        fetch(api_base + '/userEvents', {
+            credentials: 'include',
+          })
+          .then((response) => response.json())
+          .then((data) => setEvents(data))
+          .catch((error) => console.error(error));
+      }, []);
+
+      const handleEventClick = (info) => {
+        if (window.confirm('Are you sure you want to remove this event?')) {
+          const event = info.event;
+          const eventId = event.extendedProps._id;
+    
+          // DELETE the event using the API
+          console.log(event);
+          console.log(eventId);
+          console.log(api_base + '/delete/' + eventId);
+          fetch(api_base + '/delete/' + eventId, {
+            method: 'DELETE',
+            credentials: 'include',
+          })
+            .then((response) => response.json())
+            .then((deletedEvent) => {
+              // If the event is successfully deleted, fetch the updated events from the API.
+              fetch(api_base + '/userEvents', {
+                credentials: 'include',
+              })
+                .then((response) => response.json())
+                .then((data) => setEvents(data))
+                .catch((error) => console.error(error));
+            })
+            .catch((error) => console.error(error));
+        }
+      };
+      
+    /*
     const events = [
     {
         title: 'Event 1',
@@ -21,7 +66,7 @@ function Calendar({onClose}) {
         end: '2023-08-01T17:30:00',   // Event ends at 5:30 PM on August 1, 2023
     },
     // Add more events as needed...
-    ];
+    ];*/
 
     const handleDrag = (e, ui) => {
         const { x, y } = position;
@@ -35,15 +80,6 @@ function Calendar({onClose}) {
         };
 
         setPosition(newPosition);
-
-        if (
-            newPosition.x - width - 500 < -innerWidth ||
-            newPosition.x > innerWidth ||
-            newPosition.y - height - 280 < -innerHeight ||
-            newPosition.y > innerHeight
-        ) {
-            handleClose();
-        }
         };
 
         const handleClose = () => {
@@ -61,8 +97,8 @@ function Calendar({onClose}) {
         <div className='CalenMain'>
             <div className="CalenHandle">
                 <div className="CalenHandle-content">Calendar</div>
-                <button className="close-button" onClick={handleClose}>
-                    -
+                <button className="Calenclose-button" onClick={handleClose}>
+                <AiIcons.AiOutlineClose></AiIcons.AiOutlineClose>
                 </button>
             </div>
             <FullCalendar
@@ -75,6 +111,7 @@ function Calendar({onClose}) {
             }}
             height={"70vh"}
             events={events}
+            eventClick={handleEventClick}
             />
         </div>
     </Draggable>

@@ -1,0 +1,126 @@
+.Roombg{
+  background: linear-gradient(to right,rgb(255, 113, 113), rgb(79, 99, 255));
+  width: 100%;
+  height: 950px;
+  position: absolute;
+  margin-top: -100px;
+}
+.chat-icon {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: white;
+  border-radius: 50%;
+  padding: 10px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.chat-icon img {
+  width: 30px;
+  height: 30px;
+}
+
+.chat-modal {
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 20%;
+  min-width: 300px;
+  background-color: white;
+  border-radius: 10px;
+  padding: 25px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.chat-modal input[type="text"] {
+  flex: 1;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  margin-top: 20px;
+}
+
+.close {
+  color: #aaa;
+  border: none;
+  padding: 5px;
+  border-radius: 50%;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.message-container-container {
+  flex: 1;
+  overflow-y: auto;
+  max-height: calc(90vh - 130px);
+  width: 100%;
+}
+
+.message-container {
+  display: flex;
+  align-items: flex-start; /* Aligned to top */
+  margin: 0; /* Removed margin */
+  padding: 10px 5px; /* Removed padding */
+  font-family: 'Gill Sans';
+}
+
+.pfp-container {
+  flex: 0 0 40px;
+  margin: 0; /* Removed margin */
+  padding: 0; /* Removed padding */
+  margin-right: 15px;
+}
+
+.pfp-container img {
+  width: 40px; /* Specified a width for consistent sizing */
+  height: 40px; /* Specified a height for consistent sizing */
+  border-radius: 50%;
+  object-fit: cover; /* Ensures image covers the entire content box */
+}
+
+.message-details {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  margin: 0; /* Removed margin */
+  padding: 0; /* Removed padding */
+}
+
+.top-message-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0; /* Removed margin */
+  padding: 0; /* Removed padding */
+}
+
+.message-sender {
+  font-weight: bold;
+  margin: 0; /* Removed margin */
+  padding: 0; /* Removed padding */
+}
+
+.message-date {
+  font-size: 12px;
+  color: #666;
+  margin: 0; /* Removed margin */
+  padding: 0; /* Removed padding */
+}
+
+.message-content {
+  font-size: 14px;
+  margin: 0; /* Removed margin */
+  padding: 0; /* Removed padding */
+}

@@ -1,0 +1,48 @@
+/* Navbar.css */
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgb(226, 106, 106);
+  color: #fff;
+  padding: 17px;
+  border-radius: 10px;
+  margin-top: 90px;
+  opacity: 90%;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  font-family: "Gill Sans";
+  font-size: 20px;;
+}
+
+.nav-links li {
+  margin-right: 1rem;
+}
+
+.nav-links li a {
+  text-decoration: none;
+  color: #fff;
+  transition: 0.3s;
+}
+
+.nav-links li a:hover {
+  color: #5512f3;
+}
+
+.roomButton{
+  cursor: pointer;
+}
+
+.roomButton:hover{
+  color: #5512f3;
+}

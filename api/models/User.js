@@ -15,8 +15,16 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
+  profilePicture: {
+    type: String,
+    default: "/images/SoneDefaultPFP.png"
+  },
+  inRoom: {
+      type: Schema.Types.ObjectId,
+      ref: 'StudyRoom',
+  }
+
 });
 
-const User = mongoose.model("UserData", UserSchema);
-
+const User = mongoose.model("User", UserSchema);
 module.exports = User;
